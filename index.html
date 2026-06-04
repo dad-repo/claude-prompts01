@@ -1,76 +1,233 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>文芸編集＊Claudeプロンプト集</title>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
   <style>
-    body{
-      font-family:sans-serif;
-      background:#f5f5f5;
-      padding:40px;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --bg-info: #e6f1fb;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-info: #185fa5;
+      --border: rgba(0,0,0,0.12);
+      --border-secondary: rgba(0,0,0,0.22);
+      --radius-md: 8px;
+      --radius-lg: 12px;
     }
 
-    h1{
-      margin-bottom:30px;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1e1e;
+        --bg-secondary: #2a2a2a;
+        --bg-info: #0c2a42;
+        --text-primary: #e8e8e8;
+        --text-secondary: #999999;
+        --text-info: #85b7eb;
+        --border: rgba(255,255,255,0.12);
+        --border-secondary: rgba(255,255,255,0.22);
+      }
     }
 
-    .card{
-      background:#f0f8ff;
-      padding:20px;
-      border-radius:12px;
-      margin-bottom:20px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 40px 24px;
+      min-height: 100vh;
     }
 
-    button{
-      background:#222;
-      color:white;
-      border:none;
-      padding:10px 16px;
-      border-radius:8px;
-      cursor:pointer;
+    .header {
+      max-width: 900px;
+      margin: 0 auto 28px;
     }
 
-    pre{
-      background:#f0f0f0;
-      padding:12px;
-      border-radius:8px;
-      white-space:pre-wrap;
-      max-height:180px;
-      overflow:auto;
+    .header h1 {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
     }
 
-    #toast{
-      position:fixed;
-      top:20px;
-      right:20px;
-      background:#222;
-      color:white;
-      padding:12px 18px;
-      border-radius:8px;
-      opacity:0;
-      transition:0.3s;
+    .header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
     }
 
-    #toast.show{
-      opacity:1;
+    .grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
     }
+
+    .card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover { border-color: var(--border-secondary); }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 10px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .card-title i {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 400;
+    }
+
+    .badge-char { background: var(--bg-info); color: var(--text-info); }
+    .badge-time { background: #EAF3DE; color: #3B6D11; }
+    .badge-check { background: #FAEEDA; color: #854F0B; }
+    .badge-copy { background: var(--bg-secondary); color: var(--text-secondary); }
+
+    @media (prefers-color-scheme: dark) {
+      .badge-time { background: #1a2e0f; color: #97c459; }
+      .badge-check { background: #2e1f08; color: #ef9f27; }
+    }
+
+    .preview {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      padding: 0 16px 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+
+    .full-text {
+      display: none;
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      padding: 12px 16px;
+      white-space: pre-wrap;
+      max-height: 260px;
+      overflow-y: auto;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .full-text.open { display: block; }
+
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 14px;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .expand-btn {
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.15s;
+    }
+
+    .expand-btn:hover { color: var(--text-primary); }
+
+    .expand-btn i { transition: transform 0.2s; }
+
+    .copy-btn {
+      font-size: 12px;
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border-secondary);
+      border-radius: var(--radius-md);
+      padding: 5px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-primary);
+      transition: background 0.15s;
+    }
+
+    .copy-btn:hover { background: var(--bg); }
+    .copy-btn.done { color: #3B6D11; }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg);
+      border: 0.5px solid var(--border-secondary);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--text-primary);
+      opacity: 0;
+      transition: opacity 0.25s;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    #toast.show { opacity: 1; }
   </style>
 </head>
-
 <body>
 
-<h1>文芸編集＊Claudeプロンプト集</h1>
+<div class="header">
+  <h1>文芸編集＊Claudeプロンプト集</h1>
+  <p>プロンプトをコピーして、Claudeに貼り付けて使います</p>
+</div>
 
-<div class="card">
-  <h2>キャラ分析</h2>
+<div class="grid" id="grid"></div>
 
-  <pre id="prompt1">
-登場キャラクターの情報を整理してください。
-【参照対象】
-・ドキュメント名：「初稿」
+<div id="toast">
+  <i class="ti ti-check" style="color:#3B6D11;font-size:15px"></i> コピーしました
+</div>
 
+<script>
+const prompts = [
+  {
+    title: "キャラ分析",
+    badge: "badge-char",
+    badgeLabel: "キャラクター",
+    icon: "ti-users",
+    text: `登場キャラクターの情報を整理してください。
 【抽出対象】
 ・主要キャラクターを中心に抽出する
 ・登場回数が極端に少ないモブキャラは除外する
@@ -84,7 +241,7 @@
 
 【出力形式】
 以下のカラム構成の表一覧をGoogleのスプレッドシートに出力してください
-キャラ名	役割	関係性	一人称	年齢	職業	外見	服装	性格	欲求	弱点	口調	初登場	変化	セリフ	タグ
+キャラ名\t役割\t関係性\t一人称\t年齢\t職業\t外見\t服装\t性格\t欲求\t弱点\t口調\t初登場\t変化\tセリフ\tタグ
 
 【各項目の定義】
 ■キャラ名
@@ -147,47 +304,45 @@
 【補足】
 ・キャラクターごとに情報量の偏りが出ないよう、可能な範囲で均等に整理すること
 ・関係性や性格は、読者に伝わる言葉で簡潔にまとめること
-・必要に応じて章ごとに情報を確認し、最終的に統合すること    
-  </pre>
+・必要に応じて章ごとに情報を確認し、最終的に統合すること`
+  },
+  {
+    title: "時系列分析",
+    badge: "badge-time",
+    badgeLabel: "整合性",
+    icon: "ti-clock",
+    text: `添付した小説原稿を読み、物語内の時系列を厳密に整理・検証してください。
 
-  <button onclick="copyText('prompt1')">
-    📋 コピー
-  </button>
-</div>
+# 目的
+物語の時間の流れを完全に可視化し、時系列の矛盾・不整合を発見する。
 
-<div class="card">
-  <h2>時系列分析</h2>
+# 重要ルール
+・必ずSTEP1の表を完成させてから、STEP2の矛盾チェックに進んでください。
+・本文中の時間表現を最優先で参照する。
+・推測ではなく、明確な根拠がある場合のみ記載する。
+・「同日」「翌日」「数時間後」などの曖昧表現もすべて拾う。
+・章ごとに整理し、最終的に統合する。
+・連続するシーン間で時間経過が明示されていない場合は「経過不明」と明記する。
+・原稿が長い場合は章ごとに処理し、最後に全体を統合してください。
 
-  <pre id="prompt2">
-「初稿」の内容を参照し、物語内の時系列を厳密に整理・検証してください。
+# STEP1：時系列の抽出
+作中の出来事をすべて時系列順に整理し、以下のTSV形式で出力してください。
+スプレッドシートにそのまま貼り付けられる形式です。
 
-【目的】
-物語の時間の流れを完全に可視化し、時系列の矛盾・不整合を発見する
-
-【STEP1：時系列の抽出】
-まず、作中の出来事をすべて時系列順に整理してください。
-
-【出力形式】
-以下のカラム構成の表一覧をGoogleのスプレッドシートに出力してください
-
-【出力形式①：時系列テーブル】
-| No | 時間軸 | 経過時間 | 該当シーン | 出来事 | 関係キャラ | 根拠表現 |
-|----|--------|----------|------------|--------|------------|------------|
+No\t時間軸\t経過時間\t該当シーン\t出来事\t関係キャラ\t根拠表現
 
 ■各項目の定義
 ・時間軸：作中時間（例：1日目 朝／同日 夜／3日後 など）
-・経過時間：前の出来事からどれくらい時間が経っているか（例：数時間後、翌日など）
+・経過時間：前の出来事からどれくらい時間が経っているか（例：数時間後、翌日、経過不明）
 ・該当シーン：章や状況（例：第2章 主人公帰宅シーンなど）
 ・出来事：何が起きたか簡潔に
 ・関係キャラ：そのシーンに関与するキャラクター
 ・根拠表現：本文中の時間を示す記述（例：「翌朝」「数時間後」など）
 
-【STEP2：時系列の矛盾チェック】
-次に、上記の時系列をもとに矛盾・不整合を抽出してください。
+# STEP2：時系列の矛盾チェック
+STEP1の時系列をもとに、矛盾・不整合を以下のTSV形式で出力してください。
 
-【出力形式②：矛盾一覧】
-| 該当箇所 | 問題内容 | 矛盾の種類 | 詳細説明 | 修正案 |
-|----------|----------|------------|------------|------------|
+該当箇所\t問題内容\t矛盾の種類\t詳細説明\t修正案
 
 ■矛盾の種類（以下から選択）
 ・時間の逆行（前後関係の破綻）
@@ -197,59 +352,55 @@
 ・その他
 
 ■詳細説明
-・どの出来事とどの出来事がどう矛盾しているのか明確に
+・どの出来事とどの出来事がどう矛盾しているのか明確に記載する
 
 ■修正案
-・どのように修正すれば自然になるか簡潔に提案
+・どのように修正すれば自然になるか簡潔に提案する
+・矛盾が見当たらない場合は「時系列の矛盾は見当たりませんでした」とだけ出力する
 
-【重要ルール】
-・本文中の時間表現を最優先で参照する
-・推測ではなく、明確な根拠がある場合のみ記載する
-・「同日」「翌日」「数時間後」などの曖昧表現もすべて拾う
-・必要に応じて章ごとに整理し、最終的に統合する
-・連続するシーン間で時間経過が明示されていない場合は「経過不明」として明記する
-
-【補足】
-・キャラクターの移動時間（現実的かどうか）も考慮する
+# 補足確認項目
+・キャラクターの移動時間が現実的かどうかも考慮する
 ・昼→夜などの時間帯変化も追跡する
-・連続シーンにおける時間経過の有無も明示する
-・恋愛進展のスピード（出会い→関係深化）が時間的に自然かも確認する
-  </pre>
+・連続シーンにおける時間経過の有無も明示する`
+  },
+  {
+    title: "矛盾点チェック",
+    badge: "badge-check",
+    badgeLabel: "整合性",
+    icon: "ti-alert-triangle",
+    text: `添付した小説原稿を読み、ストーリーの流れにおける相違点・矛盾点を整理してください。
 
-  <button onclick="copyText('prompt2')">
-    📋 コピー
-  </button>
-</div>
+※時系列の詳細検証は別途「時系列整理プロンプト」で実施済みの想定です。
+　このプロンプトでは設定・キャラクター・連続性の矛盾を中心にチェックしてください。
+　時系列整理プロンプトを使用していない場合は、時系列のズレも合わせて確認してください。
 
-  <div class="card">
-  <h2>矛盾点チェック</h2>
+# 目的
+物語内の設定・キャラクター行動の不整合を発見し、修正しやすい形で可視化する。
 
-  <pre id="prompt3">
-「初稿」の内容をもとに、ストーリーの流れにおける相違点・矛盾点を整理してください。
-
-【目的】
-物語内の設定・時系列・キャラクター行動の不整合を発見し、修正しやすい形で可視化する
-
-【チェック対象】
-・時系列のズレ
+# チェック対象
 ・キャラクター設定の不一致
 ・行動や動機の矛盾
 ・アイテムや状況の連続性の破綻
 ・一度出た設定が後で変わっている箇所
+・時系列のズレ（時系列整理プロンプト未使用の場合）
 
-【出力形式】
-以下の形式でGoogleのスプレッドシートで出力してください。
-明確な矛盾と、明確な矛盾ではないが違和感のある注意点を、同じ表内にまとめてください。
+# 重要ルール
+・本文内で明確に食い違っている箇所は「矛盾」として抽出する。
+・明確な矛盾ではないが、読者が違和感を覚える可能性がある箇所は「注意点」として抽出する。
+・「矛盾」と「注意点」は、必ず表の「判定区分」列で分けて記載する。
+・推測は避け、本文に基づいて判断する。
+・可能であれば該当箇所は複数比較する。
+・原稿が長い場合は章ごとに処理し、最後に全体を統合してください。
+・矛盾・注意点が見当たらない場合は「相違点・矛盾点は見当たりませんでした」とだけ出力してください。
 
-| 判定区分 | 該当箇所 | 登場シーン① | 登場シーン② | 相違内容・違和感 | 問題の種類 | 修正の方向性 |
-|----------|----------|------------|------------|----------------|------------|----------------|
+# 出力形式
+以下のTSV形式で出力してください。スプレッドシートにそのまま貼り付けられる形式です。
+
+判定区分\t該当箇所\t登場シーン①\t登場シーン②\t相違内容・違和感\t問題の種類\t修正の方向性
 
 ■判定区分
-・「矛盾」または「注意点」で分類する
 ・矛盾：本文内で明確に食い違っている箇所
 ・注意点：明確な矛盾ではないが、読者が違和感を覚える可能性がある箇所
-
-【各項目の説明】
 
 ■該当箇所
 ・どのあたりのシーンか（例：第3章 冒頭、主人公帰宅シーンなど）
@@ -265,75 +416,60 @@
 ・「注意点」の場合：読者がどこに違和感を覚えそうかを簡潔に記載する
 
 ■問題の種類（以下から選択）
-・時系列
-・キャラ設定
-・行動矛盾
-・アイテム整合性
-・世界観設定
-・感情変化
-・関係性
-・その他
+・時系列 ・キャラ設定 ・行動矛盾 ・アイテム整合性 ・世界観設定 ・関係性 ・その他
 
 ■修正の方向性
-・どちらに寄せるべきか、またはどう修正すべきかを簡潔に提案
+・どちらに寄せるべきか、またはどう修正すべきかを簡潔に提案する
 
-【重要ルール】
-・本文内で明確に食い違っている箇所は「矛盾」として抽出する
-・明確な矛盾ではないが、読者が違和感を覚える可能性がある箇所は「注意点」として抽出する
-・「矛盾」と「注意点」は、必ず表の「判定区分」列で分けて記載する
-・推測は避け、本文に基づいて判断する
-・可能であれば該当箇所は複数比較する
-
-【補足】
+# 補足確認項目
 ・同じキャラクターの設定（年齢・口調・能力など）が変化していないか重点的に確認する
 ・時間経過（昼→夜、数日後など）の整合性も確認する
-・特に主要キャラクターについては、一人称・口調・性格のブレを重点的に確認する
-・章ごとに確認し、最後に全体を通して再チェックすること
-  </pre>
+・主要キャラクターの一人称・口調・性格のブレを重点的に確認する`
+  },
+  {
+    title: "キャラ崩壊チェック",
+    badge: "badge-char",
+    badgeLabel: "キャラクター",
+    icon: "ti-mood-nervous",
+    text: `添付した小説原稿を読み、キャラクターの一貫性（キャラ崩壊）がないかを厳密に検証してください。
 
-  <button onclick="copyText('prompt3')">
-    📋 コピー
-  </button>
-</div>
+# 目的
+キャラクターの性格・口調・行動・価値観のブレを特定し、修正しやすい形で可視化する。
 
-<div class="card">
-  <h2>キャラ崩壊</h2>
+# 重要ルール
+・必ずSTEP1→STEP2→STEP3の順に処理してください。
+・明確なブレのみを抽出する。
+・成長・変化の描写が本文内で明示されている場合は除外する。
+・描写がなく唐突に変化している場合は「成長過程の不整合」として抽出する。
+・推測ではなく本文の描写を根拠にする。
+・一人称・口調・性格の一貫性を重点的にチェックする。
+・一人称の変化はすべて抽出し、意図的かどうかを判断する。
+・原稿が長い場合は章ごとに処理し、最後に全体を統合してください。
+・キャラクターの性格判断はセリフを最優先で参照する。
 
-  <pre id="prompt4">
-「初稿」の内容を参照し、キャラクターの一貫性（キャラ崩壊）がないかを厳密に検証してください。
+# STEP1：基準キャラ設定の抽出
+主要キャラクターについて「基準となるキャラクター性」を整理し、以下のTSV形式で出力してください。
 
-【目的】
-キャラクターの性格・口調・行動・価値観のブレを特定し、修正しやすい形で可視化する
+キャラ名\t基本性格\t一人称\t口調\t価値観・信念\t対人スタンス
 
-【STEP1：基準キャラ設定の抽出】
-まず、各主要キャラクターについて「基準となるキャラクター性」を整理してください。
-
-以下の形式でGoogleのスプレッドシートで出力してください。
-
-【出力形式①：キャラ基準表】
-| キャラ名 | 基本性格 | 一人称 | 口調 | 価値観・信念 | 対人スタンス |
-|----------|----------|--------|------|----------------|----------------|
-
-■定義
+■各項目の定義
 ・基本性格：物語全体から見た一貫した性格（例：クール・溺愛・理性的など）
 ・一人称：主に使用するもの
 ・口調：話し方の特徴
 ・価値観・信念：何を大事にしているか
 ・対人スタンス：他者への接し方（例：支配的・献身的・距離を取るなど）
 
-【STEP2：シーンごとの挙動抽出】
-次に、各キャラクターのシーンごとの言動を抽出してください。
+# STEP2：シーンごとの挙動抽出
+主要キャラクターに絞り、シーンごとの言動を以下のTSV形式で出力してください。
+1シーンにつき発言・行動は代表的なものを1〜2点に絞ってください。
 
-【出力形式②：シーン別挙動】
-| キャラ名 | 該当シーン | 発言・行動 | 感情状態 | 備考 |
-|----------|------------|------------|------------|------|
+キャラ名\t該当シーン\t発言・行動\t感情状態\t備考
 
-【STEP3：崩壊チェック】
-STEP1とSTEP2を比較し、キャラ崩壊の可能性がある箇所を抽出してください。
+# STEP3：崩壊チェック
+STEP1とSTEP2を比較し、キャラ崩壊の可能性がある箇所を以下のTSV形式で出力してください。
+崩壊・注意点が見当たらない場合は「キャラ崩壊は見当たりませんでした」とだけ出力してください。
 
-【出力形式③：キャラ崩壊一覧】
-| キャラ名 | 該当シーン | 崩壊内容 | 崩壊タイプ | 詳細説明 | 修正案 |
-|----------|------------|------------|------------|------------|------------|
+キャラ名\t該当シーン\t崩壊内容\t崩壊タイプ\t詳細説明\t修正案
 
 ■崩壊タイプ（以下から選択）
 ・性格ブレ（性格と異なる行動）
@@ -344,36 +480,22 @@ STEP1とSTEP2を比較し、キャラ崩壊の可能性がある箇所を抽出�
 ・成長過程の不整合（変化の過程が飛んでいる）
 
 ■詳細説明
-・どの基準とどの行動がどうズレているのか明確に
+・どの基準とどの行動がどうズレているのか明確に記載する
 
 ■修正案
-・どちらに寄せるべきか、または自然な補強方法を提案
+・どちらに寄せるべきか、または自然な補強方法を簡潔に提案する
 
-【重要ルール】
-・明確なブレのみを抽出する（意図的な成長は除外）
-・推測ではなく本文の描写を根拠にする
-・一人称・口調・性格の一貫性を重点的にチェックする
-・一人称の変化はすべて抽出し、意図的かどうかを判断する
-・章ごとに確認し、最終的に統合する
-
-【補足】
-・感情の流れ（徐々に変化しているか）も考慮する
-・特に恋愛関係における態度変化は丁寧に確認する
-・一時的な例外行動は「理由が描写されているか」で判断する
-・恋愛関係において「急に態度が変わっていないか」を重点的に確認する
-・キャラクターの性格判断はセリフを最優先で参照する
-  </pre>
-
-  <button onclick="copyText('prompt4')">
-    📋 コピー
-  </button>
-</div>
-
-  <div class="card">
-  <h2>文字校正</h2>
-
-  <pre id="prompt5">
-「初稿」の、誤字脱字・変換ミス・表記ゆれ・助詞の抜け・不自然な文をチェックしてください。
+# 補足確認項目
+・感情の流れが徐々に変化しているかも考慮する
+・恋愛関係における態度変化は「急な変化がないか」を重点的に確認する
+・一時的な例外行動は「理由が本文内で描写されているか」で判断する`
+  },
+  {
+    title: "文字校正",
+    badge: "badge-copy",
+    badgeLabel: "校正",
+    icon: "ti-pencil",
+    text: `誤字脱字・変換ミス・表記ゆれ・助詞の抜け・不自然な文をチェックしてください。
 
 # 目的
 小説原稿の内容は可能な限り変えず、誤字脱字や明らかな文章上のミスを発見し、修正しやすい形で整理すること。
@@ -399,59 +521,220 @@ STEP1とSTEP2を比較し、キャラ崩壊の可能性がある箇所を抽出�
 6. 句読点の不自然さ
 7. 会話文のカギ括弧や記号の不備
 8. 人名・地名・固有名詞の表記ゆれ
-9. 時系列や状況描写として明らかに不自然な箇所
-10. 読者が一瞬つまずきそうな文章
+9. 同一段落内で時系列が明らかに前後している箇所（誤記レベルのもの）
+10. 表記・記号・句読点の観点でつまずきが生じる箇所（文章内容の評価は除く）
+11. 数字・単位の表記統一
+　　（例：「3人」と「三人」の混在、「cm」と「センチ」の混在）
+12. 記号・括弧の詳細確認
+　　・二重カギ括弧「『』」の開閉対応
+　　・ダッシュ（――）の半角・全角混在
+　　・「…」と「・・・」の混在
+　　・「！」「？」の半角・全角混在
+13. 改行・段落の確認
+　　・地の文と会話文の間の改行抜け
+　　・同一話者の発言が段落をまたいで続く場合の処理ミス
+　　※入稿形式によって正解が異なる場合は「要確認」としてください。
 
 # 出力形式
-以下の表形式でGoogleのスプレッドシートで出力してください。
+以下の表形式でTSV（タブ区切り）で出力してください。スプレッドシートにそのまま貼り付けられる形式です。
 
-| No. | 該当箇所 | 指摘内容 | 修正案 | 判定 |
-|---|---|---|---|---|
+No.\t該当箇所\t指摘内容\t修正案\t判定
 
 # 判定の種類
-・誤字脱字
-・変換ミス
-・表記ゆれ
-・助詞
-・句読点
-・文章不自然
-・要確認
+・誤字脱字 ・変換ミス ・表記ゆれ ・助詞 ・句読点
+・数字／単位 ・記号 ・改行／段落
+・文章不自然：句読点・助詞・語順など表記レベルで読みにくい箇所
+・要確認：正誤判断が難しく、作者意図の確認が必要なもの
 
 # 出力時の注意
 ・該当箇所は、原稿から短く引用してください。
 ・修正案は1つに絞ってください。
 ・大幅な言い換え案は不要です。
-・問題がない場合は「大きな誤字脱字は見当たりません」と出力してください。
-・最後に、表記ゆれ一覧があればまとめてください。
-  </pre>
+・チェック項目に該当する箇所が見当たらない場合は「校正箇所は見当たりませんでした」とだけ出力してください。
+・同一原稿内で複数箇所に出た表記ゆれは、表の後にまとめて一覧化してください。`
+  },
+  {
+    title: "作品情報",
+    badge: "badge-copy",
+    badgeLabel: "情報整理",
+    icon: "ti-file-description",
+    text: `小説原稿を読み、以下の作品情報を原稿から読み取って埋めてください。
 
-  <button onclick="copyText('prompt5')">
-    📋 コピー
-  </button>
-</div>
-  
-<div id="toast">
-✅ コピー完了
-</div>
+# ルール
+・原稿に明記されている情報だけを使ってください。
+・原稿から読み取れない項目は「原稿から読み取れず」と記載してください。
+・推測・補完・創作は一切しないでください。
+・あらすじは原稿の内容を200字以内で要約してください。
+・「タイトルに入れたいキーワード」は原稿中に繰り返し登場する印象的な言葉や設定を3〜5個抽出してください。
+・【レーベル・想定レーベル】は空欄のままにしてください（編集者が後で記入します）。
+・【避けたい表現】は空欄のままにしてください（編集者が後で記入します）。
 
-<script>
-function copyText(id){
+# 出力形式
+以下のフォーマットをそのまま使い、各項目を埋めて出力してください。
 
-  const text =
-    document.getElementById(id).innerText;
+【レーベル・想定レーベル】
+【ジャンル】
+【ターゲット読者】
 
-  navigator.clipboard.writeText(text);
+【ヒロイン】
+年齢：
+職業・立場：
+性格：
+悩み・弱点：
+物語開始時の状況：
 
-  const toast =
-    document.getElementById("toast");
+【ヒーロー】
+年齢：
+職業・立場：
+性格：
+ヒロインへの感情：
+魅力・売りポイント：
 
-  toast.classList.add("show");
+【二人の関係性】
+【物語の中心要素】
+【あらすじ】
+【タイトルに入れたいキーワード】
+【避けたい表現】`
+  },
+  {
+    title: "タイトル案",
+    badge: "badge-char",
+    badgeLabel: "企画",
+    icon: "ti-sparkles",
+    text: `あなたは、女性向け小説・TL小説・異世界恋愛・電子書籍ストアの売れ筋に詳しい編集者兼コピーライターです。
+以下の作品情報をもとに、読者の興味を引き、電子書籍ストアでクリックされやすい小説タイトル案を考えてください。
 
-  setTimeout(()=>{
-    toast.classList.remove("show");
-  },1500);
+# 目的
+・作品の魅力が一目で伝わるタイトルを作る
+・ジャンル読者が「読みたい」と思う売れ筋感のあるタイトルにする
+・検索性、訴求力、キャッチーさを重視する
+・抽象的・文芸的すぎるタイトルではなく、内容と関係性が伝わるタイトルにする
+
+# 作品情報
+【レーベル・想定レーベル】
+
+【ジャンル】
+
+【ターゲット読者】
+
+【ヒロイン】
+年齢：
+職業・立場：
+性格：
+悩み・弱点：
+物語開始時の状況：
+
+【ヒーロー】
+年齢：
+職業・立場：
+性格：
+ヒロインへの感情：
+魅力・売りポイント：
+
+【二人の関係性】
+
+【物語の中心要素】
+
+【あらすじ】
+
+【タイトルに入れたいキーワード】
+
+【避けたい表現】
+
+# 出力形式
+
+以下の形式で出力してください。
+
+## 1. レーベル的タイトル案
+以下のパターンで各3案出してください。
+・属性＋感情＋官能描写
+・状況＋行動＋官能描写
+・作中要素のピックアップ
+
+## 2. 売れ筋直球タイトル案
+電子書籍ストアで内容が伝わりやすく、読者がクリックしやすいタイトルを5案出してください。
+
+## 3. 溺愛・執着感を強めたタイトル案
+ヒーローの愛情、独占欲、執着、甘さが伝わるタイトルを5案出してください。
+
+## 4. 関係性フック重視のタイトル案
+二人の関係性が一目で伝わるタイトルを5案出してください。
+
+## 5. 差別化・設定フック重視のタイトル案
+作品ならではの設定や意外性が伝わるタイトルを5案出してください。
+
+## 6. 短めで覚えやすいタイトル案
+長すぎず、印象に残りやすいタイトルを5案出してください。
+
+## 7. おすすめベスト10
+上記の中から、以下の基準で10案を選んでください。
+・電子書籍ストアでのクリック率を最優先に選定する
+・似たタイプのタイトルは1案に絞り、バリエーションを持たせる
+・レーベルのトーンに合っているものを優先する
+
+| 順位 | タイトル案 | 推しポイント | 想定読者への刺さり方 | 改善余地 |
+|---|---|---|---|---|
+
+# 注意点
+・タイトルだけでジャンル、関係性、甘さ、物語のフックが伝わるようにする
+・読者が検索しそうなキーワードを自然に入れる
+・ただ長いだけのタイトルにしない
+・タイトル内の情報量と読みやすさのバランスを取る
+・同じ単語の使い回しを避け、バリエーションを出す`
+  }
+];
+
+const grid = document.getElementById("grid");
+
+prompts.forEach((p, i) => {
+  const card = document.createElement("div");
+  card.className = "card";
+  const previewText = p.text.split('\n').slice(0, 4).join('\n');
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="card-title">
+        <i class="ti ${p.icon}"></i>
+        ${p.title}
+      </div>
+      <span class="badge ${p.badge}">${p.badgeLabel}</span>
+    </div>
+    <div class="preview">${previewText}</div>
+    <div class="full-text" id="full-${i}">${p.text}</div>
+    <div class="card-foot">
+      <button class="expand-btn" onclick="toggleExpand(${i}, this)">
+        <i class="ti ti-chevron-down" id="chevron-${i}"></i> 展開
+      </button>
+      <button class="copy-btn" id="copybtn-${i}" onclick="copyPrompt(${i})">
+        <i class="ti ti-copy"></i> コピー
+      </button>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+function toggleExpand(i, btn) {
+  const full = document.getElementById("full-" + i);
+  const chevron = document.getElementById("chevron-" + i);
+  const isOpen = full.classList.toggle("open");
+  chevron.style.transform = isOpen ? "rotate(180deg)" : "";
+  btn.childNodes[2].textContent = isOpen ? " 閉じる" : " 展開";
+}
+
+function copyPrompt(i) {
+  const text = prompts[i].text.replace(/\\t/g, '\t');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copybtn-" + i);
+    btn.classList.add("done");
+    btn.innerHTML = '<i class="ti ti-check"></i> コピー済み';
+    setTimeout(() => {
+      btn.classList.remove("done");
+      btn.innerHTML = '<i class="ti ti-copy"></i> コピー';
+    }, 2000);
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1800);
+  });
 }
 </script>
-
 </body>
 </html>
